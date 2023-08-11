@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
-from art import tprint
+# from art import tprint
 
+
+#---------------------------recognition using the yolo library---------------------
 
 def apply_yolo_object_detection(image_to_process):
 
@@ -43,9 +45,12 @@ def apply_yolo_object_detection(image_to_process):
             image_to_process = draw_object_bounding_box(image_to_process,
                                                         class_index, box)
 
-    final_image = draw_object_count(image_to_process, objects_count)
+    # final_image = draw_object_count(image_to_process, objects_count)
+    final_image = image_to_process
     return final_image
 
+
+#-------------------------escaping objects----------------------------
 
 def draw_object_bounding_box(image_to_process, index, box):
 
@@ -68,26 +73,28 @@ def draw_object_bounding_box(image_to_process, index, box):
     return final_image
 
 
-def draw_object_count(image_to_process, objects_count):
+# def draw_object_count(image_to_process, objects_count):
+#
+#
+#     start = (10, 120)
+#     font_size = 1.5
+#     font = cv2.FONT_HERSHEY_SIMPLEX
+#     width = 3
+#     text = "Objects found: " + str(objects_count)
+#
+#     # Text output with a stroke
+#     # (so that it can be seen in different lighting conditions of the picture)
+#     white_color = (255, 255, 255)
+#     black_outline_color = (0, 0, 0)
+#     final_image = cv2.putText(image_to_process, text, start, font, font_size,
+#                               black_outline_color, width * 3, cv2.LINE_AA)
+#     final_image = cv2.putText(final_image, text, start, font, font_size,
+#                               white_color, width, cv2.LINE_AA)
+#
+#     return final_image
 
 
-    start = (10, 120)
-    font_size = 1.5
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    width = 3
-    text = "Objects found: " + str(objects_count)
-
-    # Text output with a stroke
-    # (so that it can be seen in different lighting conditions of the picture)
-    white_color = (255, 255, 255)
-    black_outline_color = (0, 0, 0)
-    final_image = cv2.putText(image_to_process, text, start, font, font_size,
-                              black_outline_color, width * 3, cv2.LINE_AA)
-    final_image = cv2.putText(final_image, text, start, font, font_size,
-                              white_color, width, cv2.LINE_AA)
-
-    return final_image
-
+#---------------------------check for basic errors---------------------------------
 
 def start_image_object_detection(img_path):
 
@@ -109,22 +116,23 @@ def start_image_object_detection(img_path):
 if __name__ == '__main__':
 
 
-    # Loading YOLO scales from files and setting up the network
+#-------------------------------Loading YOLO scales---------------------------------------
+
     net = cv2.dnn.readNetFromDarknet("Resources/yolov4-tiny.cfg",
                                      "Resources/yolov4-tiny.weights")
     layer_names = net.getLayerNames()
     out_layers_indexes = net.getUnconnectedOutLayers()
     out_layers = [layer_names[index - 1] for index in out_layers_indexes]
 
-    # Loading from a file of object classes that YOLO can detect
-    with open("Resources/coco.names.txt") as file:
+#---------------------Loading object classes that YOLO can detect-------------------------
+
+    with open("Resources/objectNames.txt") as file:
         classes = file.read().split("\n")
 
-    # Determining classes that will be prioritized for search in an image
-    # The names are in the file coco.names.txt
+#----------------specify the path to the image and the target of recognition--------------
 
-    image = input("Path to image: ")
-    look_for = input("What we are looking for: ").split(',')
+    image = r"Result\input"'\\' + input("Path to image: ")
+    look_for = input("Object: ").split(',')
     
     # Delete spaces
     list_look_for = []
